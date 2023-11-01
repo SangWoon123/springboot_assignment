@@ -12,6 +12,7 @@ public class MusicDTO {
     private String artist;
     private String title;
     private int playTime;
+    private PlayListDTO.ResponseMusicList playListDTO;
 
 
 }

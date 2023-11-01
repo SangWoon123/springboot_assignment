@@ -7,9 +7,12 @@ import com.week.gdsc.dto.PlayListDTO;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,16 +39,22 @@ public class PlayListService {
     public void addMusicToPlaylist(Long musicNum,Long playListNum){
         Playlist playlist = findByIdPlayList(playListNum);
         Music music = musicRepository.findById(musicNum).orElseThrow(() -> new IllegalArgumentException("해당음악이 존재하지 않습니다."));
+
+        //추가
+        music.setPlaylist(playlist);
+
         List<Music> musicList = playlist.getMusicList();
         musicList.add(music);
     }
 
     // 플레이리스트에 있는 음악 조회
-    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum){
+    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum, Pageable pageable){
         Playlist playlist = findByIdPlayList(playListNum);
 
-        List<Music> musicList = playlist.getMusicList();
-        List<MusicDTO> musicDTOList = musicList.stream().map(
+        // 플레이리스트의 음악 목록을 페이지네이션하여 조회
+        Page<Music> musicPage = musicRepository.findByPlaylistId(playlist.getId(), pageable);
+
+        List<MusicDTO> musicDTOList = musicPage.getContent().stream().map(
                 music ->
                         MusicDTO.builder()
                                 .id(music.getId())
@@ -61,6 +70,7 @@ public class PlayListService {
                 .musicDTOList(musicDTOList)
                 .build();
     }
+
 
     // 플레이리스트 이름 수정
     public PlayListDTO.ResponseMusicList updatePlayListName(Long playListNum,String newName){
@@ -89,9 +99,13 @@ public class PlayListService {
     @Transactional
     public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum,List<Long> musicId){
         Playlist playlist=findByIdPlayList(playListNum);
-        playlist.getMusicList().removeIf(music -> musicId.contains(music.getId()));
-
         List<Music> musicList = playlist.getMusicList();
+
+        // 제거할 음악리스트를 분리해서 playList에서 제거
+        List<Music> removeMusicList = musicList.stream().filter(music -> musicId.contains(music.getId())).collect(Collectors.toList());
+        removeMusicList.forEach(music -> music.setPlaylist(null));
+
+
         List<MusicDTO> musicDTOList = musicList.stream().map(
                 music ->
                         MusicDTO.builder()
@@ -110,14 +124,20 @@ public class PlayListService {
     }
 
     // 플레이리스트 삭제
+    @Transactional
     public void deletePlayList(Long playListNum){
-        Playlist playlist=findByIdPlayList(playListNum);
+        Playlist playlist = findByIdPlayList(playListNum);
+        List<Music> musicList = new ArrayList<>(playlist.getMusicList());
+        musicList.forEach(music -> music.setPlaylist(null));
         playRepository.delete(playlist);
     }
+
 
     // 중복코드 메서드
     private Playlist findByIdPlayList(Long playListNum){
         return playRepository.findById(playListNum).orElseThrow(() -> new IllegalArgumentException("플레이리스트가 존재하지 않습니다."));
     }
+
+
 
 }

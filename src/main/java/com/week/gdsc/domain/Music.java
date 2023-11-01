@@ -1,14 +1,8 @@
 package com.week.gdsc.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -23,5 +17,19 @@ public class Music {
     private String artist;
     private String title;
     private int playTime;
+
+    @ManyToOne
+    @JoinColumn(name = "playlist_id")
+    private Playlist playlist;
+
+    public void setPlaylist(Playlist playlist) {
+        if (this.playlist != null) {
+            this.playlist.getMusicList().remove(this);
+        }
+        if (playlist != null && !playlist.getMusicList().contains(this)) {
+            playlist.getMusicList().add(this);
+        }
+        this.playlist = playlist;
+    }
 
 }

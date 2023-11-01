@@ -20,11 +20,12 @@ public class Playlist {
     private Long id;
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "music_id")
+    // music 읽기만 가능 연관관계의 주인이아
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
     private List<Music> musicList;
 
     public void updateName(String name){
         this.name=name;
     }
+
 }
