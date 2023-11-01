@@ -36,12 +36,16 @@ class PlayListServiceTest {
         Music music2=Music.builder().artist("가수2").title("제목2").playTime(300).build();
         List<Music> musics = Arrays.asList(music1,music2);
 
+        musicRepository.saveAll(musics);
+
         Playlist playlist= Playlist.builder()
                 .name("테스트 플리에리스트")
                 .musicList(musics)
                         .build();
 
         Playlist save = playListRepository.save(playlist);
+
+        musics.stream().forEach(music -> music.setPlaylist(playlist));
 
         // 페이지 번호와 페이지 크기를 설정하여 Pageable 객체 생성
         Pageable pageable = PageRequest.of(0, 2);
@@ -51,7 +55,8 @@ class PlayListServiceTest {
 
         // 결과 검증
         Assertions.assertEquals("테스트 플리에리스트",result.getPlayName());
-        //성Assertions.assertEquals(music1.getTitle(),result.getMusicDTOList().get(0).getTitle());
+        Assertions.assertEquals(2,result.getMusicDTOList().size());
+        Assertions.assertEquals(music1.getTitle(),result.getMusicDTOList().get(0).getTitle());
     }
 
     @Test
