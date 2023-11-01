@@ -3,6 +3,8 @@ package com.week.gdsc.controller;
 import com.week.gdsc.dto.PlayListDTO;
 import com.week.gdsc.service.PlayListService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,14 @@ public class PlayListController {
 
     // 플레이리스트 음악조회
     @GetMapping("/{playListNum}")
-    public ResponseEntity<?> showSongList(@PathVariable Long playListNum){
-        PlayListDTO.ResponseMusicList responseMusicList = playListService.showMusicList(playListNum);
-        return new ResponseEntity<>(responseMusicList,HttpStatus.FOUND);
+    public ResponseEntity<?> showSongList(@PathVariable Long playListNum, @PageableDefault(page = 0,size = 5)Pageable pageable){
+//        // 페이지 번호와 페이지 크기를 설정하여 Pageable 객체 생성
+//        Pageable pageable = PageRequest.of(page, size);
+
+        // 플레이리스트 조회 및 음악 조회 로직 실행
+        PlayListDTO.ResponseMusicList responseMusicList = playListService.showMusicList(playListNum, pageable);
+
+        return new ResponseEntity<>(responseMusicList, HttpStatus.FOUND);
     }
 
     // 플레이리스트 이름 수정 -> Patch메서드 사용
