@@ -55,21 +55,9 @@ public class PlayListService {
         Page<Music> musicPage = musicRepository.findByPlaylistId(playlist.getId(), pageable);
         //System.out.println("토탈 엘리먼트:"+musicPage.getTotalElements()+"토탈 페이지:"+musicPage.getTotalPages());
 
-        List<MusicDTO> musicDTOList = musicPage.getContent().stream().map(
-                music ->
-                        MusicDTO.builder()
-                                .id(music.getId())
-                                .artist(music.getArtist())
-                                .title(music.getTitle())
-                                .playTime(music.formationTime())
-                                .build()
-        ).collect(Collectors.toList());
+        List<MusicDTO> musicDTOList = mapToMusicDTOS(musicPage.getContent());
 
-        return PlayListDTO.ResponseMusicList.builder()
-                .id(playlist.getId())
-                .playName(playlist.getName())
-                .musicDTOList(musicDTOList)
-                .build();
+        return ResponseDTO(playlist, musicDTOList);
     }
 
 
@@ -78,22 +66,11 @@ public class PlayListService {
         Playlist playlist = findByIdPlayList(playListNum);
         playlist.updateName(newName);
 
+        //Music -> MusicDTO
         List<Music> musicList = playlist.getMusicList();
-        List<MusicDTO> musicDTOList = musicList.stream().map(
-                music ->
-                        MusicDTO.builder()
-                                .id(music.getId())
-                                .artist(music.getArtist())
-                                .title(music.getTitle())
-                                .playTime(music.formationTime())
-                                .build()
-        ).collect(Collectors.toList());
+        List<MusicDTO> musicDTOList = mapToMusicDTOS(musicList);
 
-        return PlayListDTO.ResponseMusicList.builder()
-                .id(playlist.getId())
-                .playName(playlist.getName())
-                .musicDTOList(musicDTOList)
-                .build();
+        return ResponseDTO(playlist, musicDTOList);
     }
 
     //플레이리스트 에서 음악제거
@@ -106,22 +83,10 @@ public class PlayListService {
         List<Music> removeMusicList = musicList.stream().filter(music -> musicId.contains(music.getId())).collect(Collectors.toList());
         removeMusicList.forEach(music -> music.setPlaylist(null));
 
+        //Music -> MusicDTO
+        List<MusicDTO> musicDTOList = mapToMusicDTOS(musicList);
 
-        List<MusicDTO> musicDTOList = musicList.stream().map(
-                music ->
-                        MusicDTO.builder()
-                                .id(music.getId())
-                                .artist(music.getArtist())
-                                .title(music.getTitle())
-                                .playTime(music.formationTime())
-                                .build()
-        ).collect(Collectors.toList());
-
-        return PlayListDTO.ResponseMusicList.builder()
-                .id(playlist.getId())
-                .playName(playlist.getName())
-                .musicDTOList(musicDTOList)
-                .build();
+        return ResponseDTO(playlist, musicDTOList);
     }
 
     // 플레이리스트 삭제
@@ -137,6 +102,27 @@ public class PlayListService {
     // 중복코드 메서드
     private Playlist findByIdPlayList(Long playListNum){
         return playRepository.findById(playListNum).orElseThrow(() -> new IllegalArgumentException("플레이리스트가 존재하지 않습니다."));
+    }
+
+    private static PlayListDTO.ResponseMusicList ResponseDTO(Playlist playlist, List<MusicDTO> musicDTOList) {
+        return PlayListDTO.ResponseMusicList.builder()
+                .id(playlist.getId())
+                .playName(playlist.getName())
+                .musicDTOList(musicDTOList)
+                .build();
+    }
+
+    private static List<MusicDTO> mapToMusicDTOS(List<Music> musicList) {
+        List<MusicDTO> musicDTOList = musicList.stream().map(
+                music ->
+                        MusicDTO.builder()
+                                .id(music.getId())
+                                .artist(music.getArtist())
+                                .title(music.getTitle())
+                                .playTime(music.formationTime())
+                                .build()
+        ).collect(Collectors.toList());
+        return musicDTOList;
     }
 
 
