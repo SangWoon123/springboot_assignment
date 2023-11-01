@@ -53,6 +53,7 @@ public class PlayListService {
 
         // 플레이리스트의 음악 목록을 페이지네이션하여 조회
         Page<Music> musicPage = musicRepository.findByPlaylistId(playlist.getId(), pageable);
+        //System.out.println("토탈 엘리먼트:"+musicPage.getTotalElements()+"토탈 페이지:"+musicPage.getTotalPages());
 
         List<MusicDTO> musicDTOList = musicPage.getContent().stream().map(
                 music ->
@@ -60,7 +61,7 @@ public class PlayListService {
                                 .id(music.getId())
                                 .artist(music.getArtist())
                                 .title(music.getTitle())
-                                .playTime(music.getPlayTime())
+                                .playTime(music.formationTime())
                                 .build()
         ).collect(Collectors.toList());
 
@@ -84,7 +85,7 @@ public class PlayListService {
                                 .id(music.getId())
                                 .artist(music.getArtist())
                                 .title(music.getTitle())
-                                .playTime(music.getPlayTime())
+                                .playTime(music.formationTime())
                                 .build()
         ).collect(Collectors.toList());
 
@@ -112,7 +113,7 @@ public class PlayListService {
                                 .id(music.getId())
                                 .artist(music.getArtist())
                                 .title(music.getTitle())
-                                .playTime(music.getPlayTime())
+                                .playTime(music.formationTime())
                                 .build()
         ).collect(Collectors.toList());
 

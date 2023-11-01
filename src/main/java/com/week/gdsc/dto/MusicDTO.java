@@ -11,8 +11,5 @@ public class MusicDTO {
     private Long id;
     private String artist;
     private String title;
-    private int playTime;
-    private PlayListDTO.ResponseMusicList playListDTO;
-
-
+    private String playTime;
 }
