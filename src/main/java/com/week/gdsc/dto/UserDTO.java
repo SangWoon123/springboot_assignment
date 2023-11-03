@@ -18,11 +18,12 @@ public class UserDTO {
     public static class UserVerifyResponseDto {
         private boolean isValid;
     }
-//    @Getter
-//    public static class UserResponseDto {
-//        private String userId;
-//        public UserResponseDto(User users){
-//            this.userId = users.getUserId();
-//        }
-//    }
+
+    public static UserDTO toUserDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .password(user.getPassword())
+                .build();
+    }
 }

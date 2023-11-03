@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    public User create(final User user){
+    public UserDTO create(final User user){
         if(user==null || user.getUserId()==null){
             throw new RuntimeException("Invalid arguments");
         }
@@ -25,7 +25,9 @@ public class UserService {
             throw new RuntimeException("Username already exists");
         }
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return UserDTO.toUserDTO(savedUser);
     }
 
     public User byUserID(String userId){
@@ -39,21 +41,16 @@ public class UserService {
     }
 
 
-    public UserDTO.UserVerifyResponseDto authenticateUser(UserDTO userDTO){
-        if(userRepository.existsByUserId(userDTO.getUserId())){
-            return UserDTO.UserVerifyResponseDto.builder()
-                    .isValid(true)
-                    .build();
-        }
-        return UserDTO.UserVerifyResponseDto.builder()
-                .isValid(false)
-                .build();
-    }
-
+    /*
+    패스워드를
+ */
     public User getByCredentials(String userId, String password) {
         User originalUser=userRepository.findByUserId(userId);
 
-        if(originalUser!=null) return originalUser;
+        if(originalUser!=null ) {
+            log.info("getByCredentials: 사용자 인증 완료");
+            return originalUser;
+        }
 
         return null;
     }

@@ -1,5 +1,6 @@
 package com.week.gdsc.domain;
 
+import com.week.gdsc.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +25,10 @@ public class User {
     private String userId;
     private String password;
 
+    public static User toEntity(UserDTO userDTO) {
+        return User.builder()
+                .userId(userDTO.getUserId())
+                .password(userDTO.getPassword())
+                .build();
+    }
 }

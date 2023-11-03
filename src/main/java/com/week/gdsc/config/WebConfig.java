@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new JwtFilter(provider,userService));
         filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/auth/*");
+        filterRegistrationBean.addUrlPatterns("/auth/login");
         return filterRegistrationBean;
     }
 
@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new AuthenticationFilter(objectMapper,userService));
         filterRegistrationBean.setOrder(2);
-        filterRegistrationBean.addUrlPatterns("/auth/*");
+    filterRegistrationBean.addUrlPatterns("/auth/**     ");
         return filterRegistrationBean;
     }
 }

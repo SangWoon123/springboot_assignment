@@ -17,6 +17,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+//@Order(1)
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
@@ -26,8 +27,10 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token=parserBearerToken(request);
 
-        if(token!=null){
+        if(token!=null&& !token.equalsIgnoreCase("null")){
+            log.info("{JwtFilter 실행중..} token 존재");
             String userID=tokenProvider.validateAndGetUserId(token);
+
             User user = userService.byUserID(userID);
 
             request.setAttribute("user",user);

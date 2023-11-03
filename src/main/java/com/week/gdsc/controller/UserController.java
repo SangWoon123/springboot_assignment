@@ -7,10 +7,9 @@ import com.week.gdsc.dto.UserDTO;
 import com.week.gdsc.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,22 +20,13 @@ public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
 
+//    private final PasswordEncoder passwordEncoder;
+//    TextEn
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO){
-
-        User user=User.builder()
-                .userId(userDTO.getUserId())
-                .password(userDTO.getPassword())
-                .build();
-
-        User registeredUser=userService.create(user);
-        UserDTO responseUserDTO=UserDTO.builder()
-                .id(registeredUser.getId())
-                .userId(registeredUser.getUserId())
-                .build();
-
-        return ResponseEntity.ok().body(responseUserDTO);
+        UserDTO registeredUser=userService.create(User.toEntity(userDTO));
+        return ResponseEntity.ok().body(registeredUser);
     }
 
     // 로그인
@@ -52,12 +42,18 @@ public class UserController {
                     .token(token)
                     .build();
 
-            System.out.println(responseUserDTO.getToken());
             return ResponseEntity.ok().body(responseUserDTO);
         }
         UserDTO.UserVerifyResponseDto.UserVerifyResponseDtoBuilder valid = UserDTO.UserVerifyResponseDto.builder()
                 .isValid(false);
 
         return ResponseEntity.badRequest().body(valid);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> test(HttpServletRequest request){
+        User user = (User) request.getAttribute("user");
+
+        return ResponseEntity.ok().body(user);
     }
 }
