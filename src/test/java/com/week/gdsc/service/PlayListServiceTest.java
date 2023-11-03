@@ -2,6 +2,7 @@ package com.week.gdsc.service;
 
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
+import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlayListDTO;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
@@ -79,7 +80,8 @@ class PlayListServiceTest {
         // 테스트 데이터 생성
         Music music1=Music.builder().artist("가수1").title("제목1").playTime(300).build();
         Music music2=Music.builder().artist("가수2").title("제목2").playTime(300).build();
-        List<Music> musicList = Arrays.asList(music1,music2);
+        Music music3=Music.builder().artist("가수3").title("제목2").playTime(300).build();
+        List<Music> musicList = Arrays.asList(music1,music2,music3);
 
         List<Music> musics = musicRepository.saveAll(musicList);
 
@@ -93,9 +95,12 @@ class PlayListServiceTest {
         // music에 어떤 플레이리스트에 있는지 설정
         musics.stream().forEach(music -> music.setPlaylist(playlist));
 
+        MusicDTO.DeleteMusicListNum deleteMusicListNumBuilder = MusicDTO.DeleteMusicListNum.builder()
+                .deleteMusicNumList(Arrays.asList(music1.getId(),music3.getId()))
+                .build();
 
         //when 음악 삭제 실행
-        playListService.deleteMusicInPlayList(save.getId(), Arrays.asList(music1.getId()));
+        playListService.deleteMusicInPlayList(save.getId(), deleteMusicListNumBuilder);
 
         //then
         Playlist result = playListRepository.findById(playlist.getId()).orElseThrow(() -> new IllegalArgumentException("플레이리스트가 존재하지 않습니다."));

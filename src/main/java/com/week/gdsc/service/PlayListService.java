@@ -77,16 +77,26 @@ public class PlayListService {
 
     //플레이리스트 에서 음악제거
     @Transactional
-    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum,List<Long> musicId){
+    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum,MusicDTO.DeleteMusicListNum deleteMusicListNum){
         Playlist playlist=findByIdPlayList(playListNum);
-        List<Music> musicList = playlist.getMusicList();
+//        List<Music> musicList = playlist.getMusicList();
+
+        // 제거할 음악의 ID 리스트
+        List<Long> removeMusicIds = deleteMusicListNum.getDeleteMusicNumList();
+
+        List<Music> removeMusicList = playlist.getMusicList().stream()
+                .filter(music -> removeMusicIds.contains(music.getId()))
+                .collect(Collectors.toList());
 
         // 제거할 음악리스트를 분리해서 playList에서 제거
-        List<Music> removeMusicList = musicList.stream().filter(music -> musicId.contains(music.getId())).collect(Collectors.toList());
-        removeMusicList.forEach(music -> music.setPlaylist(null));
+        removeMusicList.forEach(music -> {
+            music.setPlaylist(null);
+            playlist.getMusicList().remove(music);
+        });
 
         //Music -> MusicDTO
-        List<MusicDTO> musicDTOList = mapToMusicDTOS(musicList);
+        List<MusicDTO> musicDTOList = mapToMusicDTOS(playlist.getMusicList());
+
 
         // 음악체크
         if(musicDTOList.isEmpty()){

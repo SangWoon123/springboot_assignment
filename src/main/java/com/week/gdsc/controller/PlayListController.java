@@ -1,5 +1,6 @@
 package com.week.gdsc.controller;
 
+import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlayListDTO;
 import com.week.gdsc.service.PlayListService;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +53,9 @@ public class PlayListController {
     }
 
     //플레이리스트 에서 음악제거
-    @DeleteMapping("/music/{playListNum}")
-    public ResponseEntity<?> deleteMusicInPlayList(@PathVariable Long playListNum, @RequestBody List<Long> musicId){
-        PlayListDTO.ResponseMusicList result=playListService.deleteMusicInPlayList(playListNum,musicId);
+    @PostMapping("/delete/{playListNum}")
+    public ResponseEntity<?> deleteMusicInPlayList(@PathVariable Long playListNum, @RequestBody MusicDTO.DeleteMusicListNum deleteMusicListNum){
+        PlayListDTO.ResponseMusicList result=playListService.deleteMusicInPlayList(playListNum,deleteMusicListNum);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 

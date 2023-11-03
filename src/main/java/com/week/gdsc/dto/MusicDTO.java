@@ -1,8 +1,8 @@
 package com.week.gdsc.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -12,4 +12,12 @@ public class MusicDTO {
     private String artist;
     private String title;
     private String playTime;
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DeleteMusicListNum{
+        private List<Long> deleteMusicNumList;
+    }
 }
