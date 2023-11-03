@@ -4,6 +4,8 @@ import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlayListDTO;
+import com.week.gdsc.exception.BusinessLogicException;
+import com.week.gdsc.exception.ErrorCode;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +40,7 @@ public class PlayListService {
     @Transactional
     public void addMusicToPlaylist(Long musicNum,Long playListNum){
         Playlist playlist = findByIdPlayList(playListNum);
-        Music music = musicRepository.findById(musicNum).orElseThrow(() -> new IllegalArgumentException("해당음악이 존재하지 않습니다."));
+        Music music = musicRepository.findById(musicNum).orElseThrow(() -> new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND));
 
         //추가
         music.setPlaylist(playlist);
@@ -86,6 +88,11 @@ public class PlayListService {
         //Music -> MusicDTO
         List<MusicDTO> musicDTOList = mapToMusicDTOS(musicList);
 
+        // 음악체크
+        if(musicDTOList.isEmpty()){
+            throw new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND_FOR_DELETE);
+        }
+
         return ResponseDTO(playlist, musicDTOList);
     }
 
@@ -101,7 +108,8 @@ public class PlayListService {
 
     // 중복코드 메서드
     private Playlist findByIdPlayList(Long playListNum){
-        return playRepository.findById(playListNum).orElseThrow(() -> new IllegalArgumentException("플레이리스트가 존재하지 않습니다."));
+        return playRepository.findById(playListNum).
+                orElseThrow(()-> new BusinessLogicException(ErrorCode.PLAYLIST_NOT_FOUND));
     }
 
     private static PlayListDTO.ResponseMusicList ResponseDTO(Playlist playlist, List<MusicDTO> musicDTOList) {
