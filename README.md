@@ -1,5 +1,9 @@
 # springboot_assignment
 
+Branch 
+ * main (API + Exception)
+ * Login (Login) 
+
 ## 1) 음악 재생 목록 관리 API - 사용자가 자신의 음악 재생 목록을 만들고 관리할 수 있는 API
 
 - CRUD(등록, 조회(페이징 되어야 함.), 수정, 삭제 기능이 각 1개씩 반드시 포함)를 위한 간단한 REST API 설계 및 구현
@@ -7,6 +11,7 @@
     * 음악은 따로 X (SQL 로 추가)
 ### ERD 설계
 참고) 애플뮤직 음악 플레이리스트 
+
 <img width="403" alt="스크린샷 2023-11-01 오전 1 28 38" src="https://github.com/SangWoon123/springboot_assignment/assets/100204926/5b60d4d1-5ba0-4023-8af8-257254fa5999">
 
 ### 도메인
@@ -21,7 +26,7 @@
 
 구현방식 2가지
 
-- 필터적용 O / filter ( jwt 필터 → 인증 필터) → 컨트롤러(로그인)
+- **필터적용 O / filter ( jwt 필터 → 인증 필터) → 컨트롤러(로그인)**
 - 필터적용 X
 
 ### 순서
