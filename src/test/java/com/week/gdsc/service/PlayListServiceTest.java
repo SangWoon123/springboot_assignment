@@ -4,6 +4,7 @@ import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlayListDTO;
+import com.week.gdsc.exception.BusinessLogicException;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
 import org.junit.jupiter.api.Assertions;
@@ -128,4 +129,16 @@ class PlayListServiceTest {
         Playlist fetched = playListRepository.findById(save.getId()).orElse(null);
         Assertions.assertNull(fetched);
     }
+
+    // exception 테스트코드
+    // 플레이리스트 생성할때 이름없는 경우 오류발생
+    @Test
+    public void testCreatePlayList_emptyName() {
+        PlayListDTO.Create playListDTO = PlayListDTO.Create.builder().
+                name("").build();
+        Assertions.assertThrows(BusinessLogicException.class, () -> {
+            playListService.createPlayList(playListDTO);
+        });
+    }
+
 }
