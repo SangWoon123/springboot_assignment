@@ -23,12 +23,12 @@ public class WebConfig implements WebMvcConfigurer {
         return filterRegistrationBean;
     }
 
-    @Bean
-    public FilterRegistrationBean authUser(ObjectMapper objectMapper,UserService userService) {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new AuthenticationFilter(objectMapper,userService));
-        filterRegistrationBean.setOrder(2);
-    filterRegistrationBean.addUrlPatterns("/auth/**     ");
-        return filterRegistrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean authUser(ObjectMapper objectMapper,UserService userService) {
+//        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+//        filterRegistrationBean.setFilter(new AuthenticationFilter(objectMapper,userService));
+//        filterRegistrationBean.setOrder(2);
+//    filterRegistrationBean.addUrlPatterns("/auth/**     ");
+//        return filterRegistrationBean;
+//    }
 }

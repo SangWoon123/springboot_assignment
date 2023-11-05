@@ -53,7 +53,6 @@ public class UserController {
     @GetMapping("/user")
     public ResponseEntity<?> test(HttpServletRequest request){
         User user = (User) request.getAttribute("user");
-
         return ResponseEntity.ok().body(user);
     }
 }
