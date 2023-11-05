@@ -26,6 +26,12 @@ public class PlayListService {
 
 
     public PlayListDTO.Response createPlayList(PlayListDTO.Create playListDTO){
+
+        // 플레이리스트 이름 미입력시 발생하는 오류
+        if(playListDTO.getName()==null || playListDTO.getName().equals("")){
+            throw new BusinessLogicException(ErrorCode.PLAYLIST_NAME_NOT_FOUND);
+        }
+        
         Playlist playlist= Playlist.builder()
                 .name(playListDTO.getName())
                 .build();
