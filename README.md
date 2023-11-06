@@ -10,6 +10,14 @@ Branch
 
     - **페이징 시나리오**: (앱에서 실행하므로 화면에보여지는 데이터는 최대 5개)  5개 이상의 음악이 있을시 페이징 적용
     * 음악은 SQL 로 추가
+        ```sql
+        INSERT INTO `music` (`artist`, `title`, `play_time`) VALUES
+            ('세븐틴', '음악의신',205),
+            ('RIIZE','Talk Saxy',191),
+            ('츄','Howl',170),
+            ('투모로우바이투게더','Chasing That Feeling',183),
+            ('아이브','Baddie',154);
+        ```
 
 
 ![image](https://github.com/SangWoon123/springboot_assignment/assets/100204926/7c05b299-c28e-49f0-b30c-6074cc9e71db)
