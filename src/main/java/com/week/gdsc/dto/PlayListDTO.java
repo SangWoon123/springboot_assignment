@@ -7,7 +7,6 @@ import java.util.List;
 
 public class PlayListDTO {
     @Getter
-    @Builder
     public static class Create{
         private String name;
     }

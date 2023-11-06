@@ -20,7 +20,7 @@ public class Playlist {
     private Long id;
     private String name;
 
-    // music 읽기만 가능 연관관계의 주인이아
+    // music 읽기만 가능 연관관계의 주인 X
     @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
     private List<Music> musicList;
 
