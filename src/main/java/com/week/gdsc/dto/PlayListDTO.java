@@ -1,14 +1,26 @@
 package com.week.gdsc.dto;
 
-import com.week.gdsc.domain.Music;
 import lombok.*;
 
 import java.util.List;
 
 public class PlayListDTO {
+
     @Getter
-    public static class Create{
-        private String name;
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AddMusicRequest{
+        private Long musicNum;
+
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RequestPlaylistName {
+        private String playlistName;
     }
 
     @Getter

@@ -25,15 +25,15 @@ public class PlayListService {
     private final MusicRepository musicRepository;
 
 
-    public PlayListDTO.Response createPlayList(PlayListDTO.Create playListDTO){
+    public PlayListDTO.Response createPlayList(PlayListDTO.RequestPlaylistName playListDTO) {
 
         // 플레이리스트 이름 미입력시 발생하는 오류
-        if(playListDTO.getName()==null || playListDTO.getName().equals("")){
+        if (playListDTO.getPlaylistName().isBlank()) {
             throw new BusinessLogicException(ErrorCode.PLAYLIST_NAME_NOT_FOUND);
         }
-        
-        Playlist playlist= Playlist.builder()
-                .name(playListDTO.getName())
+
+        Playlist playlist = Playlist.builder()
+                .name(playListDTO.getPlaylistName())
                 .build();
         Playlist save = playRepository.save(playlist);
 
@@ -44,7 +44,7 @@ public class PlayListService {
     }
 
     @Transactional
-    public void addMusicToPlaylist(Long musicNum,Long playListNum){
+    public void addMusicToPlaylist(Long musicNum, Long playListNum) {
         Playlist playlist = findByIdPlayList(playListNum);
         Music music = musicRepository.findById(musicNum).orElseThrow(() -> new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND));
 
@@ -56,7 +56,7 @@ public class PlayListService {
     }
 
     // 플레이리스트에 있는 음악 조회
-    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum, Pageable pageable){
+    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum, Pageable pageable) {
         Playlist playlist = findByIdPlayList(playListNum);
 
         // 플레이리스트의 음악 목록을 페이지네이션하여 조회
@@ -70,9 +70,10 @@ public class PlayListService {
 
 
     // 플레이리스트 이름 수정
-    public PlayListDTO.ResponseMusicList updatePlayListName(Long playListNum,String newName){
+    @Transactional
+    public PlayListDTO.ResponseMusicList updatePlayListName(Long playListNum, String playListName) {
         Playlist playlist = findByIdPlayList(playListNum);
-        playlist.updateName(newName);
+        playlist.updateName(playListName);
 
         //Music -> MusicDTO
         List<Music> musicList = playlist.getMusicList();
@@ -83,15 +84,12 @@ public class PlayListService {
 
     //플레이리스트 에서 음악제거
     @Transactional
-    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum,MusicDTO.DeleteMusicListNum deleteMusicListNum){
-        Playlist playlist=findByIdPlayList(playListNum);
-//        List<Music> musicList = playlist.getMusicList();
+    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum, List<Long> musics) {
+        Playlist playlist = findByIdPlayList(playListNum);
 
         // 제거할 음악의 ID 리스트
-        List<Long> removeMusicIds = deleteMusicListNum.getDeleteMusicNumList();
-
         List<Music> removeMusicList = playlist.getMusicList().stream()
-                .filter(music -> removeMusicIds.contains(music.getId()))
+                .filter(music -> musics.contains(music.getId()))
                 .collect(Collectors.toList());
 
         // 제거할 음악리스트를 분리해서 playList에서 제거
@@ -105,7 +103,7 @@ public class PlayListService {
 
 
         // 음악체크
-        if(musicDTOList.isEmpty()){
+        if (musicDTOList.isEmpty()) {
             throw new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND_FOR_DELETE);
         }
 
@@ -114,7 +112,7 @@ public class PlayListService {
 
     // 플레이리스트 삭제
     @Transactional
-    public void deletePlayList(Long playListNum){
+    public void deletePlayList(Long playListNum) {
         Playlist playlist = findByIdPlayList(playListNum);
         List<Music> musicList = new ArrayList<>(playlist.getMusicList());
         musicList.forEach(music -> music.setPlaylist(null));
@@ -123,9 +121,9 @@ public class PlayListService {
 
 
     // 중복코드 메서드
-    private Playlist findByIdPlayList(Long playListNum){
-        return playRepository.findById(playListNum).
-                orElseThrow(()-> new BusinessLogicException(ErrorCode.PLAYLIST_NOT_FOUND));
+    private Playlist findByIdPlayList(Long playListNum) {
+        return playRepository.findById(playListNum)
+                .orElseThrow(() -> new BusinessLogicException(ErrorCode.PLAYLIST_NOT_FOUND));
     }
 
     private static PlayListDTO.ResponseMusicList ResponseDTO(Playlist playlist, List<MusicDTO> musicDTOList) {
@@ -148,7 +146,6 @@ public class PlayListService {
         ).collect(Collectors.toList());
         return musicDTOList;
     }
-
 
 
 }

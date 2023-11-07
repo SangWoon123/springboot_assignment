@@ -2,7 +2,6 @@ package com.week.gdsc.service;
 
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
-import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlayListDTO;
 import com.week.gdsc.exception.BusinessLogicException;
 import com.week.gdsc.repository.MusicRepository;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -96,12 +96,16 @@ class PlayListServiceTest {
         // music에 어떤 플레이리스트에 있는지 설정
         musics.stream().forEach(music -> music.setPlaylist(playlist));
 
-        MusicDTO.DeleteMusicListNum deleteMusicListNumBuilder = MusicDTO.DeleteMusicListNum.builder()
-                .deleteMusicNumList(Arrays.asList(music1.getId(),music3.getId()))
-                .build();
+//        MusicDTO.DeleteMusicListNum deleteMusicListNumBuilder = MusicDTO.DeleteMusicListNum.builder()
+//                .deleteMusicNumList(Arrays.asList(music1.getId(),music3.getId()))
+//                .build();
+
+        List<Long> deleteMusicList=new ArrayList<>();
+        deleteMusicList.add(music1.getId());
+        deleteMusicList.add(music3.getId());
 
         //when 음악 삭제 실행
-        playListService.deleteMusicInPlayList(save.getId(), deleteMusicListNumBuilder);
+        playListService.deleteMusicInPlayList(save.getId(), deleteMusicList);
 
         //then
         Playlist result = playListRepository.findById(playlist.getId()).orElseThrow(() -> new IllegalArgumentException("플레이리스트가 존재하지 않습니다."));
@@ -134,8 +138,8 @@ class PlayListServiceTest {
     // 플레이리스트 생성할때 이름없는 경우 오류발생
     @Test
     public void testCreatePlayList_emptyName() {
-        PlayListDTO.Create playListDTO = PlayListDTO.Create.builder().
-                name("").build();
+        PlayListDTO.RequestPlaylistName playListDTO = PlayListDTO.RequestPlaylistName.builder().
+                playlistName("").build();
         Assertions.assertThrows(BusinessLogicException.class, () -> {
             playListService.createPlayList(playListDTO);
         });
