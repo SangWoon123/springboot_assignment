@@ -61,11 +61,10 @@ public class PlayListService {
 
         // 플레이리스트의 음악 목록을 페이지네이션하여 조회
         Page<Music> musicPage = musicRepository.findByPlaylistId(playlist.getId(), pageable);
-        //System.out.println("토탈 엘리먼트:"+musicPage.getTotalElements()+"토탈 페이지:"+musicPage.getTotalPages());
 
-        List<MusicDTO> musicDTOList = mapToMusicDTOS(musicPage.getContent());
+        List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(musicPage.getContent());
 
-        return ResponseDTO(playlist, musicDTOList);
+        return PlayListDTO.ResponseMusicList.ResponseDTO(playlist, musicDTOList);
     }
 
 
@@ -77,14 +76,19 @@ public class PlayListService {
 
         //Music -> MusicDTO
         List<Music> musicList = playlist.getMusicList();
-        List<MusicDTO> musicDTOList = mapToMusicDTOS(musicList);
+        List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(musicList);
 
-        return ResponseDTO(playlist, musicDTOList);
+        return PlayListDTO.ResponseMusicList.ResponseDTO(playlist, musicDTOList);
     }
 
     //플레이리스트 에서 음악제거
     @Transactional
     public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum, List<Long> musics) {
+        // 음악체크
+        if (musics.isEmpty()) {
+            throw new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND_FOR_DELETE);
+        }
+
         Playlist playlist = findByIdPlayList(playListNum);
 
         // 제거할 음악의 ID 리스트
@@ -99,15 +103,9 @@ public class PlayListService {
         });
 
         //Music -> MusicDTO
-        List<MusicDTO> musicDTOList = mapToMusicDTOS(playlist.getMusicList());
+        List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(playlist.getMusicList());
 
-
-        // 음악체크
-        if (musicDTOList.isEmpty()) {
-            throw new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND_FOR_DELETE);
-        }
-
-        return ResponseDTO(playlist, musicDTOList);
+        return PlayListDTO.ResponseMusicList.ResponseDTO(playlist, musicDTOList);
     }
 
     // 플레이리스트 삭제
@@ -126,26 +124,7 @@ public class PlayListService {
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.PLAYLIST_NOT_FOUND));
     }
 
-    private static PlayListDTO.ResponseMusicList ResponseDTO(Playlist playlist, List<MusicDTO> musicDTOList) {
-        return PlayListDTO.ResponseMusicList.builder()
-                .id(playlist.getId())
-                .playName(playlist.getName())
-                .musicDTOList(musicDTOList)
-                .build();
-    }
 
-    private static List<MusicDTO> mapToMusicDTOS(List<Music> musicList) {
-        List<MusicDTO> musicDTOList = musicList.stream().map(
-                music ->
-                        MusicDTO.builder()
-                                .id(music.getId())
-                                .artist(music.getArtist())
-                                .title(music.getTitle())
-                                .playTime(music.formationTime())
-                                .build()
-        ).collect(Collectors.toList());
-        return musicDTOList;
-    }
 
 
 }
