@@ -27,40 +27,36 @@ public class PlayListController {
     // REST API방식 @Pathvariable 사용
     // 플레이리스트에 음악추가
     @PostMapping("/{playlistId}/music") // 플레이리스트 번호 , 음악번호
-    public ResponseEntity<?> addMusicToPlaylist(@PathVariable Long playlistId, @RequestBody PlayListDTO.AddMusicRequest addMusicRequest) {
+    public ResponseEntity<String> addMusicToPlaylist(@PathVariable Long playlistId, @RequestBody PlayListDTO.AddMusicRequest addMusicRequest) {
         playListService.addMusicToPlaylist(addMusicRequest.getMusicNum(), playlistId);
         return new ResponseEntity<>("추가완료", HttpStatus.OK);
     }
 
     // 플레이리스트 음악조회
     @GetMapping("/{playlistId}")
-    public ResponseEntity<?> showSongList(@PathVariable Long playlistId, @PageableDefault(page = 0, size = 5) Pageable pageable) {
-//        // 페이지 번호와 페이지 크기를 설정하여 Pageable 객체 생성
-//        Pageable pageable = PageRequest.of(page, size);
-
+    public ResponseEntity<PlayListDTO.ResponseMusicList> showSongList(@PathVariable Long playlistId, @PageableDefault(page = 0, size = 5) Pageable pageable) {
         // 플레이리스트 조회 및 음악 조회 로직 실행
         PlayListDTO.ResponseMusicList responseMusicList = playListService.showMusicList(playlistId, pageable);
-
         return new ResponseEntity<>(responseMusicList, HttpStatus.FOUND);
     }
 
     // 플레이리스트 이름 수정 -> Patch메서드 사용
     @PatchMapping("/{playlistId}")
-    public ResponseEntity<?> updatePlayListName(@PathVariable Long playlistId, @RequestBody PlayListDTO.RequestPlaylistName playlistName) {
+    public ResponseEntity<PlayListDTO.ResponseMusicList> updatePlayListName(@PathVariable Long playlistId, @RequestBody PlayListDTO.RequestPlaylistName playlistName) {
         PlayListDTO.ResponseMusicList responseMusicList = playListService.updatePlayListName(playlistId, playlistName.getPlaylistName());
         return new ResponseEntity<>(responseMusicList, HttpStatus.OK);
     }
 
     //플레이리스트 에서 음악제거
     @DeleteMapping("/{playlistId}/music")
-    public ResponseEntity<?> deleteMusicInPlayList(@PathVariable Long playlistId, @RequestParam List<Long> musics) {
+    public ResponseEntity<PlayListDTO.ResponseMusicList> deleteMusicInPlayList(@PathVariable Long playlistId, @RequestParam List<Long> musics) {
         PlayListDTO.ResponseMusicList result = playListService.deleteMusicInPlayList(playlistId, musics);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //플레이리스트 삭제
     @DeleteMapping("/{playlistId}")
-    public ResponseEntity<?> deletePlayList(@PathVariable Long playlistId) {
+    public ResponseEntity<String> deletePlayList(@PathVariable Long playlistId) {
         playListService.deletePlayList(playlistId);
         return new ResponseEntity<>("플레이리스트 삭제완료", HttpStatus.OK);
     }
