@@ -3,6 +3,7 @@ package com.week.gdsc.service;
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.dto.PlayListDTO;
+import com.week.gdsc.exception.BusinessLogicException;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -79,7 +81,8 @@ class PlayListServiceTest {
         // 테스트 데이터 생성
         Music music1=Music.builder().artist("가수1").title("제목1").playTime(300).build();
         Music music2=Music.builder().artist("가수2").title("제목2").playTime(300).build();
-        List<Music> musicList = Arrays.asList(music1,music2);
+        Music music3=Music.builder().artist("가수3").title("제목2").playTime(300).build();
+        List<Music> musicList = Arrays.asList(music1,music2,music3);
 
         List<Music> musics = musicRepository.saveAll(musicList);
 
@@ -93,9 +96,16 @@ class PlayListServiceTest {
         // music에 어떤 플레이리스트에 있는지 설정
         musics.stream().forEach(music -> music.setPlaylist(playlist));
 
+//        MusicDTO.DeleteMusicListNum deleteMusicListNumBuilder = MusicDTO.DeleteMusicListNum.builder()
+//                .deleteMusicNumList(Arrays.asList(music1.getId(),music3.getId()))
+//                .build();
+
+        List<Long> deleteMusicList=new ArrayList<>();
+        deleteMusicList.add(music1.getId());
+        deleteMusicList.add(music3.getId());
 
         //when 음악 삭제 실행
-        playListService.deleteMusicInPlayList(save.getId(), Arrays.asList(music1.getId()));
+        playListService.deleteMusicInPlayList(save.getId(), deleteMusicList);
 
         //then
         Playlist result = playListRepository.findById(playlist.getId()).orElseThrow(() -> new IllegalArgumentException("플레이리스트가 존재하지 않습니다."));
@@ -123,4 +133,16 @@ class PlayListServiceTest {
         Playlist fetched = playListRepository.findById(save.getId()).orElse(null);
         Assertions.assertNull(fetched);
     }
+
+    // exception 테스트코드
+    // 플레이리스트 생성할때 이름없는 경우 오류발생
+    @Test
+    public void testCreatePlayList_emptyName() {
+        PlayListDTO.RequestPlaylistName playListDTO = PlayListDTO.RequestPlaylistName.builder().
+                playlistName("").build();
+        Assertions.assertThrows(BusinessLogicException.class, () -> {
+            playListService.createPlayList(playListDTO);
+        });
+    }
+
 }
