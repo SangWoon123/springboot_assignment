@@ -11,14 +11,17 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class UserDTO {
 
-    private String token;
+    private Long id;
 
     @NotBlank(message = "아이디는 필수 입력 값 입니다.")
     private String username;
 
     @NotBlank(message = "비밀번호는 필수 입력 값 입니다.")
     private String password;
-    private Long id;
+
+    private String refreshToken;
+    private String accessToken;
+
 
     @Builder
     @Getter

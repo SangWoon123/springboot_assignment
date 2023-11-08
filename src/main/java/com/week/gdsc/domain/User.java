@@ -25,7 +25,8 @@ public class User extends Auditable {
 
     private String password;
 
-    private String refreshToken;
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private RefreshToken refreshToken;
 
     public static User toEntity(UserDTO userDTO) {
         return User.builder()
