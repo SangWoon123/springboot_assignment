@@ -3,13 +3,20 @@ package com.week.gdsc.dto;
 import com.week.gdsc.domain.User;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
+
     private String token;
-    private String userId;
+
+    @NotBlank(message = "아이디는 필수 입력 값 입니다.")
+    private String username;
+
+    @NotBlank(message = "비밀번호는 필수 입력 값 입니다.")
     private String password;
     private Long id;
 
@@ -22,7 +29,7 @@ public class UserDTO {
     public static UserDTO toUserDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())
-                .userId(user.getUserId())
+                .username(user.getUsername())
                 .password(user.getPassword())
                 .build();
     }

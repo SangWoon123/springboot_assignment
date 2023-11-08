@@ -1,5 +1,6 @@
 package com.week.gdsc.service;
 
+import com.week.gdsc.config.TokenProvider;
 import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.UserDTO;
 import com.week.gdsc.repository.UserRepository;
@@ -13,14 +14,15 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    public UserDTO create(final User user){
-        if(user==null || user.getUserId()==null){
+    private final TokenProvider tokenProvider;
+    public UserDTO createUser(final User user){
+        if(user==null || user.getUsername()==null){
             throw new RuntimeException("Invalid arguments");
         }
 
-        final String id=user.getUserId(); // 개발 안정성을 위해 final 선언
+        final String id=user.getUsername(); // 개발 안정성을 위해 final 선언
 
-        if(userRepository.existsByUserId(id)){
+        if(userRepository.existsByUsername(id)){
             log.warn("Username already exists {}",id);
             throw new RuntimeException("Username already exists");
         }
@@ -30,10 +32,10 @@ public class UserService {
         return UserDTO.toUserDTO(savedUser);
     }
 
-    public User byUserID(String userId){
-        User findUser = userRepository.findByUserId(userId);
+    public User byUsername(String username){
+        User findUser = userRepository.findByUsername(username);
 
-        if(findUser==null || findUser.getUserId()==null){
+        if(findUser==null || findUser.getUsername()==null){
             throw new RuntimeException("Invalid arguments");
         }
 
@@ -44,14 +46,30 @@ public class UserService {
     /*
     패스워드를
  */
-    public User getByCredentials(String userId, String password) {
-        User originalUser=userRepository.findByUserId(userId);
+    public User getByCredentials(String username, String password,PasswordEncoder passwordEncoder) {
+        final User originalUser=userRepository.findByUsername(username);
 
-        if(originalUser!=null ) {
+        if(originalUser!=null && passwordEncoder.encrypt(username,password).equals(originalUser.getPassword())) {
             log.info("getByCredentials: 사용자 인증 완료");
             return originalUser;
         }
 
         return null;
+    }
+
+    public User findUser(String authorizationHeader){
+        String token = authorizationParser(authorizationHeader);
+        String username = tokenProvider.validateAndGetUsername(token);
+
+        return userRepository.findByUsername(username);
+
+    }
+
+    private String authorizationParser(String authorizationHeader){
+        String token=null;
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            token = authorizationHeader.substring(7);
+        }
+        return token;
     }
 }

@@ -13,9 +13,9 @@ import java.util.Base64;
 
 @Component
 public class PasswordEncoder {
-    public String encrypt(String email, String password) {
+    public String encrypt(String username, String password) {
         try {
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), getSalt(email), 85319, 128);
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), getSalt(username), 85319, 128);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
@@ -26,11 +26,11 @@ public class PasswordEncoder {
         }
     }
 
-    private byte[] getSalt(String email)
+    private byte[] getSalt(String username)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
         MessageDigest digest = MessageDigest.getInstance("SHA-512");
-        byte[] keyBytes = email.getBytes("UTF-8");
+        byte[] keyBytes = username.getBytes("UTF-8");
 
         return digest.digest(keyBytes);
     }
