@@ -24,6 +24,7 @@ public class RefreshToken {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
+    @JsonIgnore
     private User user;
 
 }
