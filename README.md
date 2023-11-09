@@ -1,26 +1,27 @@
 # springboot_assignment
 
 Branch 
- * main (API + Exception)
- * Login (Login) 
+ * main (Login + API + Exception)
 
-## 1) 음악 재생 목록 관리 API - 사용자가 자신의 음악 재생 목록을 만들고 관리할 수 있는 API
-
-- CRUD(등록, 조회(페이징 되어야 함.), 수정, 삭제 기능이 각 1개씩 반드시 포함)를 위한 간단한 REST API 설계 및 구현
-
-    - **페이징 시나리오**: (앱에서 실행하므로 화면에보여지는 데이터는 최대 5개)  5개 이상의 음악이 있을시 페이징 적용
-    * 음악은 SQL 로 추가
-        ```sql
-        INSERT INTO `music` (`artist`, `title`, `play_time`) VALUES
-            ('세븐틴', '음악의신',205),
-            ('RIIZE','Talk Saxy',191),
-            ('츄','Howl',170),
-            ('투모로우바이투게더','Chasing That Feeling',183),
-            ('아이브','Baddie',154);
-        ```
-
+## 1) 음악 재생 목록 관리 API 
 
 ![image](https://github.com/SangWoon123/springboot_assignment/assets/100204926/7c05b299-c28e-49f0-b30c-6074cc9e71db)
+
+CRUD를 위한 간단한 REST API 설계 및 구현
+
+- 페이징 시나리오: 5개 이상의 음악이 있을시 페이징 적용
+* 음악은 SQL 문을 활용
+    ```sql
+    INSERT INTO `music` (`artist`, `title`, `play_time`) VALUES
+        ('세븐틴', '음악의신',205),
+        ('RIIZE','Talk Saxy',191),
+        ('츄','Howl',170),
+        ('투모로우바이투게더','Chasing That Feeling',183),
+        ('아이브','Baddie',154);
+    ```
+
+
+
 
 #### 음악 REST API 테스트 코드 작성 (CRUD)
 
@@ -29,11 +30,8 @@ Branch
 3. 플레이리스트에 들어있는 음악 삭제 테스트 (D)
 4. 플레이리스트 삭제 테스트 (D)
 5. 플레이리스트 생성 오류 테스트
+
 ### ERD 설계
-참고) 애플뮤직 음악 플레이리스트 
-
-<img width="503" alt="애플뮤직 참고" src="https://github.com/SangWoon123/springboot_assignment/assets/100204926/c6c0b5d4-cb29-48db-95ad-b83155331b71">
-
 
 ### 도메인
 ![image](https://github.com/SangWoon123/springboot_assignment/assets/100204926/d500ab23-860e-438e-aca5-e89f3427d757)
@@ -45,16 +43,16 @@ Branch
     
 ## 2) JWT 로그인 구현 (Security 없이)
 
-구현방식 2가지
 
-- **필터적용 O / filter ( jwt 필터 → 인증 필터) → 컨트롤러(로그인)**
-- 필터적용 X
+**⭐️[프로세스]⭐️**
 
-### 순서
+1) 최초 로그인시
 
-1. jwt필터
-    * 클라이언트 요청에서 jwt토큰을 분리하여 검증하는 필터
-2. 인증필터
+    회원가입 → 로그인 → accessToken/refreshToken 생성 → refreshToken 서버DB저장 → accessToken/refreshToken 반환 → refreshToken 쿠키 저장 및 accessToken 헤더 저장
+
+2) accessToken 만료시
+
+    클라이언트 쿠키에 저장되어있는 refreshToken을 서버로 전달 → 서버에서 유효성을 검증 → 새로운 accessToken을 생성 → 리턴
 
 ## 3) Global Exeption 분리
 
