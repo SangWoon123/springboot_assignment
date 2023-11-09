@@ -47,8 +47,8 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("{JwtFilter 실행중..} AccessToken 존재");
             try {
                 String username = tokenProvider.validateAndGetUsername(token);
-                User user = userService.findByUsername(username);
-                request.setAttribute("user", user);
+                //User user = userService.findByUsername(username);
+                request.setAttribute("username", username);
             } catch (ExpiredJwtException e) {
                 logger.warn("토큰이 만료되었습니다. 리프레시 토큰을 사용하여 재발급합니다.", e);
 

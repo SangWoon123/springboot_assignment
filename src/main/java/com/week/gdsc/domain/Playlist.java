@@ -29,8 +29,12 @@ public class Playlist {
     private User user;
 
 
-    public void updateName(String name){
-        this.name=name;
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

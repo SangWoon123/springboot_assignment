@@ -41,5 +41,6 @@ public class User extends Auditable {
 
     public void updatePlaylist(Playlist playlist) {
         this.playlist.add(playlist);
+        playlist.setUser(this);
     }
 }

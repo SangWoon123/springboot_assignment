@@ -2,6 +2,7 @@ package com.week.gdsc.service;
 
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
+import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlayListDTO;
 import com.week.gdsc.exception.BusinessLogicException;
@@ -12,20 +13,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PlayListService {
     private final PlayListRepository playRepository;
     private final MusicRepository musicRepository;
+    private final UserService userService;
 
+    public PlayListDTO.Response createPlayList(PlayListDTO.RequestPlaylistName playListDTO, HttpServletRequest request) {
 
-    public PlayListDTO.Response createPlayList(PlayListDTO.RequestPlaylistName playListDTO) {
+        User user=getUserFromServlet(request);
 
         // 플레이리스트 이름 미입력시 발생하는 오류
         if (playListDTO.getPlaylistName().isBlank()) {
@@ -34,7 +39,11 @@ public class PlayListService {
 
         Playlist playlist = Playlist.builder()
                 .name(playListDTO.getPlaylistName())
+                .user(user)
                 .build();
+
+        user.updatePlaylist(playlist);
+
         Playlist save = playRepository.save(playlist);
 
         return PlayListDTO.Response.builder()
@@ -43,9 +52,12 @@ public class PlayListService {
                 .build();
     }
 
-    @Transactional
-    public void addMusicToPlaylist(Long musicNum, Long playListNum) {
+    public void addMusicToPlaylist(Long musicNum, Long playListNum,HttpServletRequest request) {
+        User user=getUserFromServlet(request);
         Playlist playlist = findByIdPlayList(playListNum);
+        // 권한체크
+        checkAccessPermission(playlist,user);
+
         Music music = musicRepository.findById(musicNum).orElseThrow(() -> new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND));
 
         //추가
@@ -56,8 +68,12 @@ public class PlayListService {
     }
 
     // 플레이리스트에 있는 음악 조회
-    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum, Pageable pageable) {
+    @Transactional(readOnly=true)
+    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum, Pageable pageable,HttpServletRequest request) {
+        User user=getUserFromServlet(request);
         Playlist playlist = findByIdPlayList(playListNum);
+        // 권한체크
+        checkAccessPermission(playlist,user);
 
         // 플레이리스트의 음악 목록을 페이지네이션하여 조회
         Page<Music> musicPage = musicRepository.findByPlaylistId(playlist.getId(), pageable);
@@ -69,7 +85,6 @@ public class PlayListService {
 
 
     // 플레이리스트 이름 수정
-    @Transactional
     public PlayListDTO.ResponseMusicList updatePlayListName(Long playListNum, String playListName) {
         Playlist playlist = findByIdPlayList(playListNum);
         playlist.updateName(playListName);
@@ -82,14 +97,19 @@ public class PlayListService {
     }
 
     //플레이리스트 에서 음악제거
-    @Transactional
-    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum, List<Long> musics) {
+    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum, List<Long> musics,HttpServletRequest request) {
+
+
         // 음악체크
         if (musics.isEmpty()) {
             throw new BusinessLogicException(ErrorCode.MUSIC_NOT_FOUND_FOR_DELETE);
         }
 
+        User user=getUserFromServlet(request);
         Playlist playlist = findByIdPlayList(playListNum);
+
+        // 권한체크
+        checkAccessPermission(playlist,user);
 
         // 제거할 음악의 ID 리스트
         List<Music> removeMusicList = playlist.getMusicList().stream()
@@ -109,9 +129,12 @@ public class PlayListService {
     }
 
     // 플레이리스트 삭제
-    @Transactional
-    public void deletePlayList(Long playListNum) {
+    public void deletePlayList(Long playListNum,HttpServletRequest request) {
+        User user=getUserFromServlet(request);
         Playlist playlist = findByIdPlayList(playListNum);
+        // 권한체크
+        checkAccessPermission(playlist,user);
+
         List<Music> musicList = new ArrayList<>(playlist.getMusicList());
         musicList.forEach(music -> music.setPlaylist(null));
         playRepository.delete(playlist);
@@ -122,6 +145,17 @@ public class PlayListService {
     private Playlist findByIdPlayList(Long playListNum) {
         return playRepository.findById(playListNum)
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.PLAYLIST_NOT_FOUND));
+    }
+
+    private User getUserFromServlet(HttpServletRequest request){
+        String username=(String)request.getAttribute("username");
+        return  userService.findByUsername(username);
+    }
+
+    private void checkAccessPermission(Playlist playlist, User user) {
+        if (playlist.getUser() != user) {
+            throw new IllegalStateException("접근 권한이 없습니다.");
+        }
     }
 
 
