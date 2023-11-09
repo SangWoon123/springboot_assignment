@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +26,9 @@ public class User extends Auditable {
 
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    private List<Playlist> playlist;
+
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
 
@@ -33,5 +37,9 @@ public class User extends Auditable {
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
                 .build();
+    }
+
+    public void updatePlaylist(Playlist playlist) {
+        this.playlist.add(playlist);
     }
 }

@@ -24,6 +24,11 @@ public class Playlist {
     @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
     private List<Music> musicList;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
     public void updateName(String name){
         this.name=name;
     }
