@@ -55,7 +55,7 @@ public class TokenProvider {
                 .setIssuer("access")
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(Instant.now()
-                        .plus(1, ChronoUnit.MINUTES)))
+                        .plus(15, ChronoUnit.MINUTES)))
                 .compact();
 
 

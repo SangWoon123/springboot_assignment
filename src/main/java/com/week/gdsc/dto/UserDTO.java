@@ -23,11 +23,6 @@ public class UserDTO {
     private String accessToken;
 
 
-    @Builder
-    @Getter
-    public static class UserVerifyResponseDto {
-        private boolean isValid;
-    }
 
     public static UserDTO toUserDTO(User user) {
         return UserDTO.builder()

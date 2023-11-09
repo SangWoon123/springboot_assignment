@@ -5,8 +5,6 @@ import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.TokenDTO;
 import com.week.gdsc.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("{JwtFilter 실행중..} AccessToken 존재");
             try {
                 String username = tokenProvider.validateAndGetUsername(token);
-                User user = userService.byUsername(username);
+                User user = userService.findByUsername(username);
                 request.setAttribute("user", user);
             } catch (ExpiredJwtException e) {
                 logger.warn("토큰이 만료되었습니다. 리프레시 토큰을 사용하여 재발급합니다.", e);
