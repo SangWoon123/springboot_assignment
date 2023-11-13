@@ -34,7 +34,8 @@ CRUD를 위한 간단한 REST API 설계 및 구현
 ### ERD 설계
 
 ### 도메인
-![image](https://github.com/SangWoon123/springboot_assignment/assets/100204926/d500ab23-860e-438e-aca5-e89f3427d757)
+![image](https://github.com/SangWoon123/springboot_assignment/assets/100204926/2efb905b-3748-4078-99a5-395f3c5a4c16)
+
 
 - 음악 ( id / 노래 제목 / 가수 / 장르 )
 - 플레이리스트 ( id / 플레이리스트 이름 )
