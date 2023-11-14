@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -17,11 +18,12 @@ import java.util.Date;
 @Component
 public class TokenProvider {
 
-    private final String SECRET_KEY="FksjdifejsfAmdsjfn9sksfnsaAfmdkfgmfrlatkddnswkdsksdlqslekdnfldkvmsepanjfgkfRkrnrmfWkddldi";
-    private RefreshTokenRepository refreshTokenRepository;
+    private final String SECRET_KEY;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public TokenProvider(RefreshTokenRepository refreshTokenRepository) {
+    public TokenProvider(@Value("${secret.key}") String SECRET_KEY, RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
+        this.SECRET_KEY=SECRET_KEY;
     }
 
     /*
