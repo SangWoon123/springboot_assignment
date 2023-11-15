@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -33,5 +34,10 @@ public class UserController {
     public ResponseEntity<?> signInUser(@RequestBody UserDTO userDTO){
         UserDTO responseUserDTO = userService.signInUser(userDTO);
         return ResponseEntity.ok().body(responseUserDTO);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> test( HttpServletRequest request){
+        return ResponseEntity.ok().body(request.getAttribute("username"));
     }
 }

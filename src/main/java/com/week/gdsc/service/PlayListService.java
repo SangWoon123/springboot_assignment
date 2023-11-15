@@ -4,7 +4,8 @@ import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.MusicDTO;
-import com.week.gdsc.dto.PlayListDTO;
+import com.week.gdsc.dto.PlaylistRequest;
+import com.week.gdsc.dto.PlaylistResponse;
 import com.week.gdsc.exception.BusinessLogicException;
 import com.week.gdsc.exception.ErrorCode;
 import com.week.gdsc.repository.MusicRepository;
@@ -28,7 +29,7 @@ public class PlayListService {
     private final MusicRepository musicRepository;
     private final UserService userService;
 
-    public PlayListDTO.Response createPlayList(PlayListDTO.RequestPlaylistName playListDTO, HttpServletRequest request) {
+    public PlaylistResponse.PlaylistNameResponse createPlayList(PlaylistRequest.UpdatePlaylistNameRequest playListDTO, HttpServletRequest request) {
 
         User user=getUserFromServlet(request);
 
@@ -46,7 +47,7 @@ public class PlayListService {
 
         Playlist save = playRepository.save(playlist);
 
-        return PlayListDTO.Response.builder()
+        return PlaylistResponse.PlaylistNameResponse.builder()
                 .id(save.getId())
                 .playListName(save.getName())
                 .build();
@@ -69,7 +70,7 @@ public class PlayListService {
 
     // 플레이리스트에 있는 음악 조회
     @Transactional(readOnly=true)
-    public PlayListDTO.ResponseMusicList showMusicList(Long playListNum, Pageable pageable,HttpServletRequest request) {
+    public PlaylistResponse.MusicsResponse showMusicList(Long playListNum, Pageable pageable, HttpServletRequest request) {
         User user=getUserFromServlet(request);
         Playlist playlist = findByIdPlayList(playListNum);
         // 권한체크
@@ -80,12 +81,12 @@ public class PlayListService {
 
         List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(musicPage.getContent());
 
-        return PlayListDTO.ResponseMusicList.ResponseDTO(playlist, musicDTOList);
+        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicDTOList);
     }
 
 
     // 플레이리스트 이름 수정
-    public PlayListDTO.ResponseMusicList updatePlayListName(Long playListNum, String playListName) {
+    public PlaylistResponse.MusicsResponse updatePlayListName(Long playListNum, String playListName) {
         Playlist playlist = findByIdPlayList(playListNum);
         playlist.updateName(playListName);
 
@@ -93,11 +94,11 @@ public class PlayListService {
         List<Music> musicList = playlist.getMusicList();
         List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(musicList);
 
-        return PlayListDTO.ResponseMusicList.ResponseDTO(playlist, musicDTOList);
+        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicDTOList);
     }
 
     //플레이리스트 에서 음악제거
-    public PlayListDTO.ResponseMusicList deleteMusicInPlayList(Long playListNum, List<Long> musics,HttpServletRequest request) {
+    public PlaylistResponse.MusicsResponse deleteMusicInPlayList(Long playListNum, List<Long> musics, HttpServletRequest request) {
 
 
         // 음악체크
@@ -125,7 +126,7 @@ public class PlayListService {
         //Music -> MusicDTO
         List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(playlist.getMusicList());
 
-        return PlayListDTO.ResponseMusicList.ResponseDTO(playlist, musicDTOList);
+        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicDTOList);
     }
 
     // 플레이리스트 삭제

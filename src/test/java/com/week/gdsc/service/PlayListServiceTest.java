@@ -3,7 +3,8 @@ package com.week.gdsc.service;
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.PlayListDTO;
+import com.week.gdsc.dto.PlaylistRequest;
+import com.week.gdsc.dto.PlaylistResponse;
 import com.week.gdsc.exception.BusinessLogicException;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +87,7 @@ class PlayListServiceTest {
         Pageable pageable = PageRequest.of(0, 2);
 
         // 플레이리스트 조회 및 음악 조회 로직 실행
-        PlayListDTO.ResponseMusicList result = playListService.showMusicList(save.getId(), pageable,mockRequest.getRequest());
+        PlaylistResponse.MusicsResponse result = playListService.showMusicList(save.getId(), pageable,mockRequest.getRequest());
 
         // 결과 검증
         Assertions.assertEquals("테스트 플리에리스트",result.getPlayName());
@@ -193,7 +193,7 @@ class PlayListServiceTest {
     // 플레이리스트 생성할때 이름없는 경우 오류발생
     @Test
     public void testCreatePlayList_emptyName() {
-        PlayListDTO.RequestPlaylistName playListDTO = PlayListDTO.RequestPlaylistName.builder().
+        PlaylistRequest.UpdatePlaylistNameRequest playListDTO = PlaylistRequest.UpdatePlaylistNameRequest.builder().
                 playlistName("").build();
 
 
