@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class UserDTO {
 
@@ -20,9 +20,8 @@ public class UserDTO {
     private String password;
 
     private String refreshToken;
+
     private String accessToken;
-
-
 
     public static UserDTO toUserDTO(User user) {
         return UserDTO.builder()

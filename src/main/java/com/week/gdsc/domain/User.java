@@ -2,10 +2,7 @@ package com.week.gdsc.domain;
 
 import com.week.gdsc.audit.Auditable;
 import com.week.gdsc.dto.UserDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,8 +10,8 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 객체의 일관성보장
 public class User extends Auditable {
 
     @Id

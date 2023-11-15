@@ -5,12 +5,13 @@ import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.TokenDTO;
 import com.week.gdsc.dto.UserDTO;
 import com.week.gdsc.repository.UserRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class UserService {
 
@@ -48,7 +49,7 @@ public class UserService {
     }
 
     public UserDTO signInUser(UserDTO userDTO) {
-        User user = getByCredentials(userDTO.getUsername(), userDTO.getPassword(), passwordEncoder);
+        User user = getByCredentials(userDTO.getUsername(), userDTO.getPassword());
         if (user != null) {
             final TokenDTO token = tokenProvider.createToken(user);
             return UserDTO.builder()
@@ -65,7 +66,7 @@ public class UserService {
     /*
     패스워드를
  */
-    private User getByCredentials(String username, String password,PasswordEncoder passwordEncoder) {
+    private User getByCredentials(String username, String password) {
         final User originalUser=userRepository.findByUsername(username);
 
         if(originalUser!=null && passwordEncoder.encrypt(username,password).equals(originalUser.getPassword())) {
