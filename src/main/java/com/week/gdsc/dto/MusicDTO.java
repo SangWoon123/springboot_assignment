@@ -28,11 +28,4 @@ public class MusicDTO {
         return musicDTOList;
     }
 
-    @Builder
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class DeleteMusicListNum{
-        private List<Long> deleteMusicNumList;
-    }
 }

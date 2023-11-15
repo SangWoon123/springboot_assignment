@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Getter
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken {

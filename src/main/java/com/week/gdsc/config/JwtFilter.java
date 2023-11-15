@@ -28,7 +28,6 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private final UserService userService;
     private static final String[] WHITE_LIST = {"/auth/signup", "/auth/login"};
 
     @Override
