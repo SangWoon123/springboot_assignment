@@ -1,5 +1,6 @@
 package com.week.gdsc.controller;
 
+import com.week.gdsc.aspect.TokenCheck;
 import com.week.gdsc.dto.PlaylistRequest;
 import com.week.gdsc.dto.PlaylistResponse;
 import com.week.gdsc.service.PlayListService;
@@ -21,6 +22,7 @@ public class PlayListController {
 
     private final PlayListService playListService;
 
+    @TokenCheck
     @PostMapping
     public ResponseEntity<PlaylistResponse.PlaylistNameResponse> createPlayList(@RequestBody @Valid PlaylistRequest.UpdatePlaylistNameRequest playListDTO, HttpServletRequest request) {
         PlaylistResponse.PlaylistNameResponse createdPlaylist = playListService.createPlayList(playListDTO,request);

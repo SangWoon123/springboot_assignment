@@ -24,7 +24,6 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-//@Order(1)
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
@@ -77,6 +76,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         }
+        log.info("token 상태: {}",token);
+        filterChain.doFilter(request,response);
+
     }
 
 
