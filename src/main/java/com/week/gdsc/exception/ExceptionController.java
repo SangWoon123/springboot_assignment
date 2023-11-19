@@ -33,7 +33,7 @@ public class ExceptionController {
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.toList());
         ErrorResponse errorResponse=new ErrorResponse(401,errorMessage);
-        return new ResponseEntity<ErrorResponse>(errorResponse,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
     }
 
 

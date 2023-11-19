@@ -1,6 +1,7 @@
 package com.week.gdsc.controller;
 
-import com.week.gdsc.aspect.TokenCheck;
+//import com.week.gdsc.aspect.TokenCheck;
+import com.week.gdsc.aspect.JwtAuth;
 import com.week.gdsc.dto.PlaylistRequest;
 import com.week.gdsc.dto.PlaylistResponse;
 import com.week.gdsc.service.PlayListService;
@@ -22,7 +23,8 @@ public class PlayListController {
 
     private final PlayListService playListService;
 
-    @TokenCheck
+
+    @JwtAuth
     @PostMapping
     public ResponseEntity<PlaylistResponse.PlaylistNameResponse> createPlayList(@RequestBody @Valid PlaylistRequest.UpdatePlaylistNameRequest playListDTO, HttpServletRequest request) {
         PlaylistResponse.PlaylistNameResponse createdPlaylist = playListService.createPlayList(playListDTO,request);
@@ -31,6 +33,7 @@ public class PlayListController {
 
     // REST API방식 @Pathvariable 사용
     // 플레이리스트에 음악추가
+    @JwtAuth
     @PostMapping("/{playlistId}/music") // 플레이리스트 번호 , 음악번호
     public ResponseEntity<String> addMusicToPlaylist(@PathVariable Long playlistId, @RequestBody @Valid PlaylistRequest.AddMusicRequest addMusicRequest, HttpServletRequest request) {
         playListService.addMusicToPlaylist(addMusicRequest.getMusicNum(), playlistId,request);
@@ -38,6 +41,7 @@ public class PlayListController {
     }
 
     // 플레이리스트 음악조회
+    @JwtAuth
     @GetMapping("/{playlistId}")
     public ResponseEntity<PlaylistResponse.MusicsResponse> showSongList(@PathVariable Long playlistId, @PageableDefault(page = 0, size = 5) Pageable pageable, HttpServletRequest request) {
         // 플레이리스트 조회 및 음악 조회 로직 실행
@@ -46,6 +50,7 @@ public class PlayListController {
     }
 
     // 플레이리스트 이름 수정 -> Patch메서드 사용
+    @JwtAuth
     @PatchMapping("/{playlistId}")
     public ResponseEntity<PlaylistResponse.MusicsResponse> updatePlayListName(@PathVariable Long playlistId, @RequestBody @Valid PlaylistRequest.UpdatePlaylistNameRequest playlistName) {
         PlaylistResponse.MusicsResponse responseMusicList = playListService.updatePlayListName(playlistId, playlistName.getPlaylistName());
@@ -53,6 +58,7 @@ public class PlayListController {
     }
 
     //플레이리스트 에서 음악제거
+    @JwtAuth
     @DeleteMapping("/{playlistId}/music")
     public ResponseEntity<PlaylistResponse.MusicsResponse> deleteMusicInPlayList(@PathVariable Long playlistId, @RequestParam List<Long> musics, HttpServletRequest request) {
         PlaylistResponse.MusicsResponse result = playListService.deleteMusicInPlayList(playlistId, musics,request);
@@ -60,6 +66,7 @@ public class PlayListController {
     }
 
     //플레이리스트 삭제
+    @JwtAuth
     @DeleteMapping("/{playlistId}")
     public ResponseEntity<String> deletePlayList(@PathVariable Long playlistId, HttpServletRequest request) {
         playListService.deletePlayList(playlistId,request);

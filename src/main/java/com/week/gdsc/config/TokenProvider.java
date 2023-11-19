@@ -59,7 +59,7 @@ public class TokenProvider {
                 .setExpiration(Date.from(Instant.now()
                         .plus(15, ChronoUnit.MINUTES)))
                 .compact();
-
+        //분리
 
         String refreshToken=Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)

@@ -16,6 +16,7 @@ public class transactionTest {
     @Autowired
     private SomeRepository repository;
 
+
     @Test
     public void test() throws CustomException{
         // checked Exception이 발생
