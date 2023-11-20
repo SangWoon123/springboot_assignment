@@ -13,7 +13,7 @@ public class PlaylistResponse {
     @Builder
     public static class PlaylistNameResponse {
         private Long id;
-        private String playListName;
+        private String playlistName;
     }
 
     @Getter

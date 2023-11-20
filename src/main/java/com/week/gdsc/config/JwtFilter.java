@@ -45,7 +45,6 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("{JwtFilter 실행중..} AccessToken 존재");
             try {
                 String username = tokenProvider.validateAndGetUsername(token);
-                //User user = userService.findByUsername(username);
                 request.setAttribute("username", username);
             } catch (ExpiredJwtException e) {
                 logger.warn("토큰이 만료되었습니다. 리프레시 토큰을 사용하여 재발급합니다.", e);
@@ -56,12 +55,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (StringUtils.hasText(refreshToken)) {
                     TokenDTO newTokens = tokenProvider.createNewAccessToken(refreshToken);
 
-                    log.info("새토큰 발급: "+newTokens.getAccessToken());
                     // 새로운 액세스 토큰과 리프레시 토큰을 응답 헤더에 설정
 //                    response.setHeader("Authorization", "Bearer " + newTokens.getAccessToken());
 //                    response.setHeader("Set-Cookie", "refreshToken=" + newTokens.getRefreshToken() + "; Path=/; HttpOnly; SameSite=None; Secure");
 
-                    log.info("새토큰 발급: " + newTokens.getAccessToken());
                     // 새로운 액세스 토큰을 JSON으로 응답에 포함시킴
                     response.setStatus(HttpStatus.OK.value());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -70,15 +67,11 @@ public class JwtFilter extends OncePerRequestFilter {
                     objectMapper.writeValue(response.getWriter(), newTokens);
                     return;
                 }
-
-
             }
-
-            filterChain.doFilter(request, response);
+        }else{
+            log.info("token 상태: {}",token);
         }
-        log.info("token 상태: {}",token);
-        filterChain.doFilter(request,response);
-
+        filterChain.doFilter(request, response);
     }
 
 

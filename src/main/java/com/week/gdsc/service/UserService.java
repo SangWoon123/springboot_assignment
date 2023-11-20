@@ -70,7 +70,6 @@ public class UserService {
         final User originalUser=userRepository.findByUsername(username);
 
         if(originalUser!=null && passwordEncoder.encrypt(username,password).equals(originalUser.getPassword())) {
-            log.info("getByCredentials: 사용자 인증 완료");
             return originalUser;
         }
 

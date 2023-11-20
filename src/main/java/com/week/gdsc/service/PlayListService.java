@@ -6,8 +6,8 @@ import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.MusicDTO;
 import com.week.gdsc.dto.PlaylistRequest;
 import com.week.gdsc.dto.PlaylistResponse;
-import com.week.gdsc.exception.BusinessLogicException;
-import com.week.gdsc.exception.ErrorCode;
+import com.week.gdsc.aspect.exception.BusinessLogicException;
+import com.week.gdsc.aspect.exception.ErrorCode;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class PlayListService {
 
         return PlaylistResponse.PlaylistNameResponse.builder()
                 .id(save.getId())
-                .playListName(save.getName())
+                .playlistName(save.getName())
                 .build();
     }
 

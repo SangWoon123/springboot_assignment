@@ -1,4 +1,4 @@
-package com.week.gdsc.exception;
+package com.week.gdsc.aspect.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

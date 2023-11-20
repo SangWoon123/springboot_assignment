@@ -34,10 +34,21 @@ public class TokenProvider {
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512,SECRET_KEY)
                 .setSubject(username) // String 변경
-                .setIssuer("Jwt login")
+                .setIssuer("access")
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(Instant.now()
                         .plus(1, ChronoUnit.DAYS)))
+                .compact();
+    }
+
+    public String createRefreshToken(String username){
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS512,SECRET_KEY)
+                .setSubject(username) // String 변경
+                .setIssuer("refresh")
+                .setIssuedAt(new Date())
+                .setExpiration(Date.from(Instant.now()
+                        .plus(15, ChronoUnit.DAYS)))
                 .compact();
     }
 
@@ -51,24 +62,8 @@ public class TokenProvider {
     }
 
     public TokenDTO createToken(User user){
-        String accessToken = Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(user.getUsername()) // String 변경
-                .setIssuer("access")
-                .setIssuedAt(new Date())
-                .setExpiration(Date.from(Instant.now()
-                        .plus(15, ChronoUnit.MINUTES)))
-                .compact();
-
-
-        String refreshToken=Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(user.getUsername()) // String 변경
-                .setIssuer("refresh")
-                .setIssuedAt(new Date())
-                .setExpiration(Date.from(Instant.now()
-                        .plus(15, ChronoUnit.DAYS)))
-                .compact();
+        String accessToken = createAccessToken(user.getUsername());
+        String refreshToken=createRefreshToken(user.getUsername());
 
         // DB에 리프레시토큰 저장
         RefreshToken newRefreshToken= RefreshToken.builder()
