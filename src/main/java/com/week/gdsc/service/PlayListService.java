@@ -3,7 +3,7 @@ package com.week.gdsc.service;
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.MusicResponse;
+import com.week.gdsc.dto.response.MusicResponse;
 import com.week.gdsc.dto.request.PlaylistRequest;
 import com.week.gdsc.dto.response.PlaylistResponse;
 import com.week.gdsc.aspect.exception.BusinessLogicException;

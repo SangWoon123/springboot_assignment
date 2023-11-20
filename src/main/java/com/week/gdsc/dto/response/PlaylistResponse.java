@@ -1,7 +1,6 @@
 package com.week.gdsc.dto.response;
 
 import com.week.gdsc.domain.Playlist;
-import com.week.gdsc.dto.MusicResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
