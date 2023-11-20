@@ -3,31 +3,32 @@ package com.week.gdsc.dto;
 import com.week.gdsc.domain.User;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-
-@Data
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserDTO {
+public class UserResponse {
 
     private Long id;
 
-    @NotBlank(message = "아이디는 필수 입력 값 입니다.")
     private String username;
-
-    @NotBlank(message = "비밀번호는 필수 입력 값 입니다.")
-    private String password;
 
     private String refreshToken;
 
     private String accessToken;
 
-    public static UserDTO toUserDTO(User user) {
-        return UserDTO.builder()
+    public static UserResponse toUserDTO(User user) {
+        return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .password(user.getPassword())
                 .build();
+    }
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class SignUpResponse{
+        private Long id;
+        private String username;
     }
 }

@@ -1,8 +1,8 @@
 package com.week.gdsc.controller;
 
 import com.week.gdsc.aspect.TokenCheck;
-import com.week.gdsc.dto.PlaylistRequest;
-import com.week.gdsc.dto.PlaylistResponse;
+import com.week.gdsc.dto.request.PlaylistRequest;
+import com.week.gdsc.dto.response.PlaylistResponse;
 import com.week.gdsc.service.PlayListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

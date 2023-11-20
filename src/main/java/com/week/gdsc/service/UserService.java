@@ -2,8 +2,9 @@ package com.week.gdsc.service;
 
 import com.week.gdsc.config.TokenProvider;
 import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.TokenDTO;
-import com.week.gdsc.dto.UserDTO;
+import com.week.gdsc.dto.request.UserRequest;
+import com.week.gdsc.dto.response.TokenResponse;
+import com.week.gdsc.dto.UserResponse;
 import com.week.gdsc.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +19,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
-    public UserDTO createUser(final UserDTO userDTO){
-        if(userDTO==null || userDTO.getUsername()==null){
+    public UserResponse.SignUpResponse createUser(final UserRequest userRequest){
+        if(userRequest ==null || userRequest.getUsername()==null){
             throw new RuntimeException("Invalid arguments");
         }
 
         User user= User.builder()
-                .username(userDTO.getUsername())
-                .password(passwordEncoder.encrypt(userDTO.getUsername(),userDTO.getPassword()))
+                .username(userRequest.getUsername())
+                .password(passwordEncoder.encrypt(userRequest.getUsername(), userRequest.getPassword()))
                 .build();
 
         if(userRepository.existsByUsername(user.getUsername())){
@@ -35,7 +36,10 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return UserDTO.toUserDTO(savedUser);
+        return UserResponse.SignUpResponse.builder()
+                .id(savedUser.getId())
+                .username(savedUser.getUsername())
+                .build();
     }
 
     public User findByUsername(String username){
@@ -48,11 +52,11 @@ public class UserService {
         return findUser;
     }
 
-    public UserDTO signInUser(UserDTO userDTO) {
-        User user = getByCredentials(userDTO.getUsername(), userDTO.getPassword());
+    public UserResponse signInUser(UserRequest userRequest) {
+        User user = getByCredentials(userRequest.getUsername(), userRequest.getPassword());
         if (user != null) {
-            final TokenDTO token = tokenProvider.createToken(user);
-            return UserDTO.builder()
+            final TokenResponse token = tokenProvider.createToken(user);
+            return UserResponse.builder()
                     .username(user.getUsername())
                     .id(user.getId())
                     .accessToken(token.getAccessToken())
