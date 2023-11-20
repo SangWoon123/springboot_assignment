@@ -3,8 +3,8 @@ package com.week.gdsc.service;
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.PlaylistRequest;
-import com.week.gdsc.dto.PlaylistResponse;
+import com.week.gdsc.dto.request.PlaylistRequest;
+import com.week.gdsc.dto.response.PlaylistResponse;
 import com.week.gdsc.aspect.exception.BusinessLogicException;
 import com.week.gdsc.repository.MusicRepository;
 import com.week.gdsc.repository.PlayListRepository;
@@ -91,8 +91,8 @@ class PlayListServiceTest {
 
         // 결과 검증
         Assertions.assertEquals("테스트 플리에리스트",result.getPlayName());
-        Assertions.assertEquals(2,result.getMusicDTOList().size());
-        Assertions.assertEquals(music1.getTitle(),result.getMusicDTOList().get(0).getTitle());
+        Assertions.assertEquals(2,result.getMusicResponseList().size());
+        Assertions.assertEquals(music1.getTitle(),result.getMusicResponseList().get(0).getTitle());
     }
 
     @Test

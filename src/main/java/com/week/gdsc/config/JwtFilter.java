@@ -1,9 +1,7 @@
 package com.week.gdsc.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.TokenDTO;
-import com.week.gdsc.service.UserService;
+import com.week.gdsc.dto.response.TokenResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 String refreshToken = extractRefreshTokenFromCookie(request);
 
                 if (StringUtils.hasText(refreshToken)) {
-                    TokenDTO newTokens = tokenProvider.createNewAccessToken(refreshToken);
+                    TokenResponse newTokens = tokenProvider.createNewAccessToken(refreshToken);
 
                     // 새로운 액세스 토큰과 리프레시 토큰을 응답 헤더에 설정
 //                    response.setHeader("Authorization", "Bearer " + newTokens.getAccessToken());

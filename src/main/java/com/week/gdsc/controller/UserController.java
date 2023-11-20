@@ -1,7 +1,7 @@
 package com.week.gdsc.controller;
 
 
-import com.week.gdsc.dto.UserResponse;
+import com.week.gdsc.dto.response.UserResponse;
 import com.week.gdsc.dto.request.UserRequest;
 import com.week.gdsc.service.UserService;
 import lombok.RequiredArgsConstructor;

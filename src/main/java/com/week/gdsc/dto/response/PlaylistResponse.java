@@ -1,6 +1,7 @@
-package com.week.gdsc.dto;
+package com.week.gdsc.dto.response;
 
 import com.week.gdsc.domain.Playlist;
+import com.week.gdsc.dto.MusicResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,13 +23,13 @@ public class PlaylistResponse {
     public static class MusicsResponse {
         private Long id;
         private String playName;
-        private List<MusicDTO> musicDTOList;
+        private List<MusicResponse> musicResponseList;
 
-        public static MusicsResponse ResponseDTO(Playlist playlist, List<MusicDTO> musicDTOList) {
+        public static MusicsResponse ResponseDTO(Playlist playlist, List<MusicResponse> musicResponseList) {
             return PlaylistResponse.MusicsResponse.builder()
                     .id(playlist.getId())
                     .playName(playlist.getName())
-                    .musicDTOList(musicDTOList)
+                    .musicResponseList(musicResponseList)
                     .build();
         }
     }

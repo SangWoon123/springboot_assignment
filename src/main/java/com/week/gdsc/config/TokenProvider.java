@@ -2,7 +2,7 @@ package com.week.gdsc.config;
 
 import com.week.gdsc.domain.RefreshToken;
 import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.TokenDTO;
+import com.week.gdsc.dto.response.TokenResponse;
 import com.week.gdsc.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -61,7 +61,7 @@ public class TokenProvider {
         }
     }
 
-    public TokenDTO createToken(User user){
+    public TokenResponse createToken(User user){
         String accessToken = createAccessToken(user.getUsername());
         String refreshToken=createRefreshToken(user.getUsername());
 
@@ -73,7 +73,7 @@ public class TokenProvider {
 
         refreshTokenRepository.save(newRefreshToken);
 
-        return new TokenDTO(accessToken,refreshToken);
+        return new TokenResponse(accessToken,refreshToken);
     }
 
     /*
@@ -88,14 +88,14 @@ public class TokenProvider {
         return claims.getSubject();
     }
 
-    public TokenDTO createNewAccessToken(String refreshToken){
+    public TokenResponse createNewAccessToken(String refreshToken){
         if(!validateRefreshToken(refreshToken)){
             throw new RuntimeException("불가한 refreshToken 입니다.");
         }
 
         String username=validateAndGetUsername(refreshToken);
         String newAccessToken=createAccessToken(username);
-        return new TokenDTO(newAccessToken,refreshToken);
+        return new TokenResponse(newAccessToken,refreshToken);
     }
 
 //    private String extractRefreshToken(String accessToken) {

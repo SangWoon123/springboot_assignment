@@ -4,7 +4,7 @@ import com.week.gdsc.config.TokenProvider;
 import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.request.UserRequest;
 import com.week.gdsc.dto.response.TokenResponse;
-import com.week.gdsc.dto.UserResponse;
+import com.week.gdsc.dto.response.UserResponse;
 import com.week.gdsc.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

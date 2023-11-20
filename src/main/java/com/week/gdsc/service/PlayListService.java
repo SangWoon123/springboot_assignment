@@ -3,9 +3,9 @@ package com.week.gdsc.service;
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.domain.User;
-import com.week.gdsc.dto.MusicDTO;
-import com.week.gdsc.dto.PlaylistRequest;
-import com.week.gdsc.dto.PlaylistResponse;
+import com.week.gdsc.dto.MusicResponse;
+import com.week.gdsc.dto.request.PlaylistRequest;
+import com.week.gdsc.dto.response.PlaylistResponse;
 import com.week.gdsc.aspect.exception.BusinessLogicException;
 import com.week.gdsc.aspect.exception.ErrorCode;
 import com.week.gdsc.repository.MusicRepository;
@@ -79,9 +79,9 @@ public class PlayListService {
         // 플레이리스트의 음악 목록을 페이지네이션하여 조회
         Page<Music> musicPage = musicRepository.findByPlaylistId(playlist.getId(), pageable);
 
-        List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(musicPage.getContent());
+        List<MusicResponse> musicResponseList = MusicResponse.mapToMusicDTOS(musicPage.getContent());
 
-        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicDTOList);
+        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicResponseList);
     }
 
 
@@ -92,9 +92,9 @@ public class PlayListService {
 
         //Music -> MusicDTO
         List<Music> musicList = playlist.getMusicList();
-        List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(musicList);
+        List<MusicResponse> musicResponseList = MusicResponse.mapToMusicDTOS(musicList);
 
-        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicDTOList);
+        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicResponseList);
     }
 
     //플레이리스트 에서 음악제거
@@ -124,9 +124,9 @@ public class PlayListService {
         });
 
         //Music -> MusicDTO
-        List<MusicDTO> musicDTOList = MusicDTO.mapToMusicDTOS(playlist.getMusicList());
+        List<MusicResponse> musicResponseList = MusicResponse.mapToMusicDTOS(playlist.getMusicList());
 
-        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicDTOList);
+        return PlaylistResponse.MusicsResponse.ResponseDTO(playlist, musicResponseList);
     }
 
     // 플레이리스트 삭제

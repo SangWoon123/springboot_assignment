@@ -9,23 +9,23 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 @AllArgsConstructor
-public class MusicDTO {
+public class MusicResponse {
     private Long id;
     private String artist;
     private String title;
     private String playTime;
 
-    public static List<MusicDTO> mapToMusicDTOS(List<Music> musicList) {
-        List<MusicDTO> musicDTOList = musicList.stream().map(
+    public static List<MusicResponse> mapToMusicDTOS(List<Music> musicList) {
+        List<MusicResponse> musicResponseList = musicList.stream().map(
                 music ->
-                        MusicDTO.builder()
+                        MusicResponse.builder()
                                 .id(music.getId())
                                 .artist(music.getArtist())
                                 .title(music.getTitle())
                                 .playTime(music.formationTime())
                                 .build()
         ).collect(Collectors.toList());
-        return musicDTOList;
+        return musicResponseList;
     }
 
 }

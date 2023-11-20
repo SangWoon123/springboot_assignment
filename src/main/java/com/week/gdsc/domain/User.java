@@ -1,7 +1,6 @@
 package com.week.gdsc.domain;
 
 import com.week.gdsc.audit.Auditable;
-import com.week.gdsc.dto.UserDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,13 +27,6 @@ public class User extends Auditable {
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
-
-    public static User toEntity(UserDTO userDTO) {
-        return User.builder()
-                .username(userDTO.getUsername())
-                .password(userDTO.getPassword())
-                .build();
-    }
 
     public void updatePlaylist(Playlist playlist) {
         this.playlist.add(playlist);

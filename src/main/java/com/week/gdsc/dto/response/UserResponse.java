@@ -1,4 +1,4 @@
-package com.week.gdsc.dto;
+package com.week.gdsc.dto.response;
 
 import com.week.gdsc.domain.User;
 import lombok.*;
