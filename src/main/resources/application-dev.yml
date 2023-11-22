@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:sql/data.sql # 서버 시작시 dml sql문을 실행할 위치 및 파일 지정
+
+secret:
+  key: "FksjdifejsfAmdsjfn9sksfnsaAfmdkfgmfrlatkddnswkdsksdlqslekdnfldkvmsepanjfgkfRkrnrmfWkddldi"
