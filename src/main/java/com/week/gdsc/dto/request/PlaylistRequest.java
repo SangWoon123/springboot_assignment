@@ -3,6 +3,7 @@ package com.week.gdsc.dto.request;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class PlaylistRequest {
 
@@ -11,7 +12,7 @@ public class PlaylistRequest {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class AddMusicRequest{
-        @NotBlank(message = "추가하려는 음악을 선택해 주세요.")
+        @NotNull(message = "추가하려는 음악을 선택해 주세요.")
         private Long musicNum;
 
     }
