@@ -1,7 +1,5 @@
 package com.week.gdsc.config;
 
-import com.week.gdsc.aspect.JwtAuth;
-import com.week.gdsc.domain.AuthUser;
 import com.week.gdsc.exception.BusinessLogicException;
 import com.week.gdsc.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtResolver implements HandlerMethodArgumentResolver {
+public class JwtArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final TokenProvider tokenProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(JwtAuth.class);
+        return parameter.hasParameterAnnotation(com.week.gdsc.aspect.JwtResolver.class);
     }
 
     @Override

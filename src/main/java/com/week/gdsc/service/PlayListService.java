@@ -54,8 +54,8 @@ public class PlayListService {
                 .build();
     }
 
-    public void addMusicToPlaylist(Long musicNum, Long playListNum,HttpServletRequest request) {
-        User user=getUserFromServlet(request);
+    public void addMusicToPlaylist(Long musicNum, Long playListNum,AuthUser authUser) {
+        User user=userService.findByUsername(authUser.getUsername());
         Playlist playlist = findByIdPlayList(playListNum);
         // 권한체크
         checkAccessPermission(playlist,user);

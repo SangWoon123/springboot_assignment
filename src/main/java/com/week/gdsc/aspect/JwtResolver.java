@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.PARAMETER,ElementType.ANNOTATION_TYPE,ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JwtAuth {
+public @interface JwtResolver {
 }

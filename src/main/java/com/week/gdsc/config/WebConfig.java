@@ -11,10 +11,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final JwtResolver jwtResolver;
+    private final JwtArgumentResolver jwtArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(jwtResolver);
+        resolvers.add(jwtArgumentResolver);
     }
 }
