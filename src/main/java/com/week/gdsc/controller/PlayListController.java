@@ -2,6 +2,7 @@ package com.week.gdsc.controller;
 
 //import com.week.gdsc.aspect.TokenCheck;
 import com.week.gdsc.aspect.JwtAuth;
+import com.week.gdsc.domain.AuthUser;
 import com.week.gdsc.dto.PlaylistRequest;
 import com.week.gdsc.dto.PlaylistResponse;
 import com.week.gdsc.service.PlayListService;
@@ -24,10 +25,13 @@ public class PlayListController {
     private final PlayListService playListService;
 
 
-    @JwtAuth
+    //@JwtAuth
     @PostMapping
-    public ResponseEntity<PlaylistResponse.PlaylistNameResponse> createPlayList(@RequestBody @Valid PlaylistRequest.UpdatePlaylistNameRequest playListDTO, HttpServletRequest request) {
-        PlaylistResponse.PlaylistNameResponse createdPlaylist = playListService.createPlayList(playListDTO,request);
+    public ResponseEntity<PlaylistResponse.PlaylistNameResponse> createPlayList(@RequestBody @Valid PlaylistRequest.UpdatePlaylistNameRequest playListDTO,@JwtAuth AuthUser authUser) {
+        if(authUser.getUsername()==null){
+            System.out.println("zzzzzz");
+        }
+        PlaylistResponse.PlaylistNameResponse createdPlaylist = playListService.createPlayList(playListDTO,authUser);
         return new ResponseEntity<>(createdPlaylist, HttpStatus.CREATED);
     }
 

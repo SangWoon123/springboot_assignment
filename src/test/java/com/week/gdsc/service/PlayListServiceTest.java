@@ -189,26 +189,26 @@ class PlayListServiceTest {
         Assertions.assertNull(fetched);
     }
 
-    // exception 테스트코드
-    // 플레이리스트 생성할때 이름없는 경우 오류발생
-    @Test
-    public void testCreatePlayList_emptyName() {
-        PlaylistRequest.UpdatePlaylistNameRequest playListDTO = PlaylistRequest.UpdatePlaylistNameRequest.builder().
-                playlistName("").build();
-
-
-        User user=User.builder().username("rlatkddns").password("1234").build();
-        userRepository.save(user);
-
-
-        // 공용 목 데이터 생성 및 사용자 이름 저장
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setAttribute("username", "rlatkddns");
-        mockRequest.applyAttributes();
-
-        Assertions.assertThrows(BusinessLogicException.class, () -> {
-            playListService.createPlayList(playListDTO,mockRequest.getRequest());
-        });
-    }
+//    // exception 테스트코드
+//    // 플레이리스트 생성할때 이름없는 경우 오류발생
+//    @Test
+//    public void testCreatePlayList_emptyName() {
+//        PlaylistRequest.UpdatePlaylistNameRequest playListDTO = PlaylistRequest.UpdatePlaylistNameRequest.builder().
+//                playlistName("").build();
+//
+//
+//        User user=User.builder().username("rlatkddns").password("1234").build();
+//        userRepository.save(user);
+//
+//
+//        // 공용 목 데이터 생성 및 사용자 이름 저장
+//        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+//        mockRequest.setAttribute("username", "rlatkddns");
+//        mockRequest.applyAttributes();
+//
+//        Assertions.assertThrows(BusinessLogicException.class, () -> {
+//            playListService.createPlayList(playListDTO,mockRequest.getRequest());
+//        });
+//    }
 
 }

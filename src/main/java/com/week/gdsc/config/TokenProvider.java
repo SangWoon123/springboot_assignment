@@ -1,8 +1,11 @@
 package com.week.gdsc.config;
 
+import com.week.gdsc.domain.AuthUser;
 import com.week.gdsc.domain.RefreshToken;
 import com.week.gdsc.domain.User;
 import com.week.gdsc.dto.TokenDTO;
+import com.week.gdsc.exception.BusinessLogicException;
+import com.week.gdsc.exception.ErrorCode;
 import com.week.gdsc.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -50,6 +53,21 @@ public class TokenProvider {
         }
     }
 
+    public boolean validateToken(String token) {
+        try {
+            return !Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(parseBearer(token))
+                    .getBody()
+                    .getExpiration().before(new Date());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessLogicException(ErrorCode.TOKEN_NOT_FOUND);
+        }
+    }
+
     public TokenDTO createToken(User user){
         String accessToken = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
@@ -87,7 +105,7 @@ public class TokenProvider {
     public String validateAndGetUsername(String token){
         Claims claims=Jwts.parser()
                 .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
+                .parseClaimsJws(parseBearer(token))
                 .getBody();
 
         return claims.getSubject();
@@ -103,17 +121,25 @@ public class TokenProvider {
         return new TokenDTO(newAccessToken,refreshToken);
     }
 
-//    private String extractRefreshToken(String accessToken) {
-//        try {
-//            Claims claims = Jwts.parserBuilder()
-//                    .setSigningKey(secretKey)
-//                    .build()
-//                    .parseClaimsJws(accessToken)
-//                    .getBody();
-//            return (String) claims.get("refreshToken");
-//        } catch (JwtException | IllegalArgumentException e) {
-//            throw new InvalidTokenException("Invalid access token");
-//        }
-//    }
+    public AuthUser getAuthUser(String token){
+        Claims getClaims=Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(parseBearer(token))
+                .getBody();
 
+
+        return AuthUser.builder()
+                .username(getClaims.getSubject())
+                .build();
+    }
+
+
+
+    /*
+    헤더 파싱
+     */
+    private String parseBearer(String authorization){
+        return authorization.replace("Bearer","").trim();
+    }
 }

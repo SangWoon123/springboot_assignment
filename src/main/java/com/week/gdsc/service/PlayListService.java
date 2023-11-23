@@ -1,5 +1,6 @@
 package com.week.gdsc.service;
 
+import com.week.gdsc.domain.AuthUser;
 import com.week.gdsc.domain.Music;
 import com.week.gdsc.domain.Playlist;
 import com.week.gdsc.domain.User;
@@ -29,9 +30,9 @@ public class PlayListService {
     private final MusicRepository musicRepository;
     private final UserService userService;
 
-    public PlaylistResponse.PlaylistNameResponse createPlayList(PlaylistRequest.UpdatePlaylistNameRequest playListDTO, HttpServletRequest request) {
+    public PlaylistResponse.PlaylistNameResponse createPlayList(PlaylistRequest.UpdatePlaylistNameRequest playListDTO, AuthUser authUser) {
 
-        User user=getUserFromServlet(request);
+        User user=userService.findByUsername(authUser.getUsername());
 
         // 플레이리스트 이름 미입력시 발생하는 오류
         if (playListDTO.getPlaylistName().isBlank()) {
@@ -152,6 +153,7 @@ public class PlayListService {
         String username=(String)request.getAttribute("username");
         return  userService.findByUsername(username);
     }
+
 
     private void checkAccessPermission(Playlist playlist, User user) {
         if (playlist.getUser() != user) {
