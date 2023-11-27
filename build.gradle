@@ -2,6 +2,28 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.google.cloud.tools.jib' version '3.1.4' // jib
+}
+
+jib{
+	container{
+		jvmFlags = ["-Xms128m", "-Xmx128m"]
+	}
+	from{
+		image="openjdk:11"
+//		platform {
+//			architecture = 'amd64'
+//			os = 'linux'
+//		}
+	}
+	to{
+		image="rlatkddns1234/testnew"
+		auth {
+			username = 'rlatkddns1234'
+			password = 'rlatkddns1234'
+		}
+	}
+
 }
 
 group = 'com.week'
@@ -29,13 +51,16 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.6'
 
+	//jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5" // 추가
 	runtimeOnly"io.jsonwebtoken:jjwt-jackson:0.11.5" // 추가
 
-
+	// Java 8 date/time type `java.time.Instant` not supported by default 문제
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.named('test') {
