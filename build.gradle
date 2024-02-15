@@ -19,10 +19,10 @@ jib{
 		}
 	}
 	to{
-		image="rlatkddns1234/testnew"
+		image=""
 		auth {
-			username = 'rlatkddns1234'
-			password = 'rlatkddns1234'
+			username = "
+			password = ""
 		}
 	}
 
